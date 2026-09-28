@@ -1,44 +1,47 @@
-# OCRmyPDF EasyOCR
+# OCRmyPDF-EasyOCR: Arabic searchable PDFs
 
-This is plugin to run OCRmyPDF with the EasyOCR engine instead of Tesseract OCR,
-the default OCR engine for OCRmyPDF. Since EasyOCR is based on PyTorch, it makes
-use of Nvidia GPUs. Hopefully it will be more performant and accurate than Tesseract OCR.
+This project integrates [EasyOCR](https://github.com/JaidedAI/EasyOCR) with OCRmyPDF and provides an Arabic-first command, `arabic-pdf-ocr`, for making scanned PDFs searchable. The plugin maps OCRmyPDF's Arabic language code `ara` to EasyOCR's `ar`; use `ara+eng` for Arabic and English.
 
-It is currently experimental and does not implement all of the features of
-OCRmyPDF with Tesseract, and still relies on Tesseract for certain operations.
+The integration is experimental. EasyOCR handles OCR, while OCRmyPDF builds the searchable PDF. Tesseract is still required for some OCRmyPDF operations, including page-orientation detection; this plugin uses OpenCV for deskewing.
 
-## Installation
+## Install
 
-To use this plugin, first
-[install PyTorch according to the official instructions](https://pytorch.org/),
-which may differ for your platform.
-
-Then install OCRmyPDF-EasyOCR to the same virtual environment or conda environment
-as you installed PyTorch:
+Install [PyTorch for your operating system and hardware](https://pytorch.org/) first. Then install OCRmyPDF-EasyOCR into that same Python environment:
 
 ```bash
-pip install git+https://github.com/ocrmypdf/OCRmyPDF-EasyOCR.git
+pip install git+https://github.com/alah1007/OCRmyPDF-EasyOCR.git
 ```
 
-The OCRmyPDF-EasyOCR will override Tesseract for OCR; however, OCR still depends
-on Tesseract for some tasks.
+The `arabic-pdf-ocr` command uses CPU by default so it also works without a supported GPU. EasyOCR's PyTorch models may be downloaded the first time it runs.
 
-If [Celery's multiprocessing](https://docs.celeryq.dev/en/stable/getting-started/introduction.html)
-is installed in the virtual environment, it will be used instead of the standard
-Python multiprocessing. This allows paperless-ngx, which uses Celery, to function correctly.
+## Use
+
+Create an Arabic-searchable PDF:
+
+```bash
+arabic-pdf-ocr scan.pdf searchable.pdf
+```
+
+Add a UTF-8 text sidecar, correct skew and page orientation, or OCR Arabic plus English:
+
+```bash
+arabic-pdf-ocr scan.pdf searchable.pdf --languages ara+eng --sidecar recognized.txt --deskew --rotate-pages
+```
+
+To enable EasyOCR GPU mode, add `--gpu` (install a compatible PyTorch/CUDA setup first). Page-orientation detection relies on Tesseract; deskewing uses OpenCV. For advanced OCRmyPDF options, the equivalent direct command is:
+
+```bash
+ocrmypdf --plugin ocrmypdf_easyocr --output-type pdf -l ara --easyocr-no-gpu scan.pdf searchable.pdf
+```
+
+If [Celery multiprocessing](https://docs.celeryq.dev/en/stable/getting-started/introduction.html) is installed in the environment, the plugin uses it instead of standard Python multiprocessing; this supports deployments such as paperless-ngx.
 
 ## Troubleshooting
 
-If you see a log message
-``Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU``
-then PyTorch is not installed.
+- If the `ocrmypdf` command is missing, install OCRmyPDF in the same environment.
+- EasyOCR model files are downloaded on first use; allow network access for that first run or install the model files in EasyOCR's configured model directory.
+- The plugin is experimental and does not yet match every OCRmyPDF/Tesseract feature. Review results on your PDFs, especially reading order and Arabic text extraction.
 
-## To do
+## Development
 
-Contributions, especially pull requests are quite welcome!
-
-At the moment this plugin is alpha status and missing some essential features:
-- Tesseract is still required for determine page skew and for orientation correction
-- EasyOCR is effectively single threaded, to eliminate race conditions
-
-
+Install the `test` extra and run `pytest`. The CLI tests verify command construction and error handling; they do not measure recognition accuracy on Arabic scans.
