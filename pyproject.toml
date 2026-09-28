@@ -1,6 +1,6 @@
 [project]
 name = "ocrmypdf-easyocr"
-version = "0.2.1"
+version = "0.2.2"
 description = "OCRmyPDF EasyOCR plugin with a general searchable PDF CLI"
 authors = [{ name = "James R. Barlow", email = "james@purplerock.ca" }]
 dependencies = [
