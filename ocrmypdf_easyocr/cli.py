@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Command-line wrapper for OCRmyPDF-EasyOCR with Arabic defaults."""
+"""Command-line wrapper for OCRmyPDF-EasyOCR."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ def build_command(
     input_pdf: Path,
     output_pdf: Path,
     *,
-    languages: str = "ara",
+    languages: str = "eng",
     gpu: bool = False,
     sidecar: Path | None = None,
     deskew: bool = False,
@@ -45,10 +45,10 @@ def build_command(
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="arabic-pdf-ocr",
+        prog="pdf-ocr",
         description=(
             "Create a searchable PDF using EasyOCR through the OCRmyPDF plugin. "
-            "Arabic is the default language."
+            "English is the default language; select another OCRmyPDF language with --languages."
         ),
     )
     parser.add_argument("input_pdf", type=Path, help="scanned or image-based PDF")
@@ -56,8 +56,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-l",
         "--languages",
-        default="ara",
-        help="OCRmyPDF language codes joined by '+', e.g. ara or ara+eng (default: ara)",
+        default="eng",
+        help="OCRmyPDF language codes joined by '+', e.g. eng or eng+fra (default: eng)",
     )
     parser.add_argument(
         "--gpu",

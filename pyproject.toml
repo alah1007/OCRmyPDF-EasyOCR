@@ -1,7 +1,7 @@
 [project]
 name = "ocrmypdf-easyocr"
 version = "0.2.1"
-description = "OCRmyPDF EasyOCR plugin with an Arabic-first searchable PDF CLI"
+description = "OCRmyPDF EasyOCR plugin with a general searchable PDF CLI"
 authors = [{ name = "James R. Barlow", email = "james@purplerock.ca" }]
 dependencies = [
   "easyocr>=1.7.0",
@@ -16,7 +16,7 @@ readme = "README.md"
 license = { text = "MIT" }
 
 [project.scripts]
-arabic-pdf-ocr = "ocrmypdf_easyocr.cli:main"
+pdf-ocr = "ocrmypdf_easyocr.cli:main"
 
 [project.entry-points]
 

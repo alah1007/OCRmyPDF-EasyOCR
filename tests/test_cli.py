@@ -14,7 +14,7 @@ cli = module_from_spec(CLI_SPEC)
 CLI_SPEC.loader.exec_module(cli)
 
 
-def test_build_command_defaults_to_arabic_and_cpu():
+def test_build_command_defaults_to_english_and_cpu():
     command = cli.build_command("ocrmypdf", Path("scan.pdf"), Path("searchable.pdf"))
 
     assert command == [
@@ -24,7 +24,7 @@ def test_build_command_defaults_to_arabic_and_cpu():
         "--output-type",
         "pdf",
         "-l",
-        "ara",
+        "eng",
         "--easyocr-no-gpu",
         "scan.pdf",
         "searchable.pdf",
@@ -59,7 +59,7 @@ def test_main_returns_ocrmypdf_status(monkeypatch):
         "--output-type",
         "pdf",
         "-l",
-        "ara",
+        "eng",
         "--easyocr-no-gpu",
         "scan.pdf",
         "searchable.pdf",
